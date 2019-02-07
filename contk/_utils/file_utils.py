@@ -53,14 +53,14 @@ class Downloader():
 		progress.close()
 
 
-	def preprocess(self, local_path, res_type):
+	def preprocess(self, local_path):
 		"""
 		preprocess after downloading and before saving
 		"""
 		return local_path
 
 
-	def postprocess(self, local_path, res_type):
+	def postprocess(self, local_path):
 		"""
 		process before read
 		"""
@@ -95,7 +95,6 @@ class Downloader():
 		cache_dir = self.dataset_cache_path
 		cache_path = os.path.join(cache_dir, res_name)
 		meta_path = cache_path + '.json'
-		res_type = config['type']
 
 		if not os.path.exists(meta_path):
 			with tempfile.NamedTemporaryFile() as temp_file:
@@ -115,7 +114,7 @@ class Downloader():
 				self.logger.info("removing temp file %s", temp_file.name)
 
 				self.logger.info("preprocessing ...")
-				cache_path = self.preprocess(cache_path, res_type)
+				cache_path = self.preprocess(cache_path)
 
 				cache_hashtag = self.get_hashtag(cache_path)
 
@@ -142,7 +141,7 @@ class Downloader():
 				self.logger.info("local hashtag %s differs with %s", cache_hashtag, config['hashtag'])
 				raise ValueError("bad hashtag of {}".format(res_name))
 
-		return self.postprocess(cache_path, config['type'])
+		return self.postprocess(cache_path)
 
 
 	def import_local_benchmark(self, res_name, local_path):
@@ -161,14 +160,14 @@ class Downloader():
 			with open(meta_path, 'w') as meta_file:
 				json.dump(meta, meta_file)
 
-			return self.postprocess(local_path, config['type'])
+			return self.postprocess(local_path)
 		else:
 			self.logger.info("local hashtag %s differs with standard %s", local_hashtag, config['hashtag'])
 			raise ValueError("bad hashtag of {}".format(res_name))
 
 
-	def import_local_resource(self, local_path, res_type):
+	def import_local_resource(self, local_path):
 		"""
 		import temporary resources from local
 		"""
-		return self.postprocess(local_path, res_type)
+		return self.postprocess(local_path)
