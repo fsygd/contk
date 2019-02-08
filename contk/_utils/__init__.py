@@ -3,6 +3,7 @@ r"""
 importing datasets and wordvectors automatically.
 """
 
-from .file_utils import Downloader
+from .file_utils import *
+from .resource_processor import ResourceProcessor, DefaultResourceProcessor
 
-__all__ = ["Downloader"]
+__all__ = ['ResourceProcessor', 'DefaultResourceProcessor']
