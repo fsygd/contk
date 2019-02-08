@@ -5,5 +5,6 @@ importing datasets and wordvectors automatically.
 
 from .file_utils import *
 from .resource_processor import ResourceProcessor, DefaultResourceProcessor
+from ._utils import *
 
 __all__ = ['ResourceProcessor', 'DefaultResourceProcessor']

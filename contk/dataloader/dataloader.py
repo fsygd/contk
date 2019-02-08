@@ -2,7 +2,7 @@
 A module for dataloader
 '''
 import random
-from .._utils._utils import trim_before_target
+from .._utils import trim_before_target
 
 
 class Dataloader():

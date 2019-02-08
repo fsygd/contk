@@ -18,8 +18,6 @@ import requests
 
 from resource_processor import DefaultResourceProcessor
 
-logging.basicConfig(level=logging.INFO, \
-		format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 LOGGER = logging.getLogger(__name__)
 DATASET_CACHE_PATH = os.path.join(os.getenv('HOME'), 'dataset_cache')
 CONFIG_DIR = '.'
