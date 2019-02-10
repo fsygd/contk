@@ -31,5 +31,6 @@ class TestFileUtils():
 
 		meta_path = res_path + '.json'
 		assert(os.path.exists(meta_path))
-		obj = json.load(meta_path)
-		assert(obj == {'local_path': res_path})
+		with open(meta_path, 'r') as meta_file:
+			meta = json.load(meta_file)
+			assert(meta == {'local_path': res_path})
