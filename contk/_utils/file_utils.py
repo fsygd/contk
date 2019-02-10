@@ -10,6 +10,7 @@ import json
 import tempfile
 import shutil
 import hashlib
+from pathlib import Path
 
 from tqdm import tqdm
 from checksumdir import dirhash
@@ -19,8 +20,8 @@ import requests
 from .resource_processor import DefaultResourceProcessor
 
 LOGGER = logging.getLogger(__name__)
-CACHE_DIR = os.path.join(os.getenv('HOME'), 'dataset_cache')
-CONFIG_DIR = '.'
+CACHE_DIR = os.path.join(Path.home(), '.contk_cache')
+CONFIG_DIR = './contk/resource_config'
 
 def get_config(res_name, config_dir):
 	'''Get config(dict) by the name of resource'''
@@ -78,7 +79,8 @@ def get_resource(res_name, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
 	if not os.path.exists(meta_path):
 		with tempfile.NamedTemporaryFile() as temp_file:
 			url = config['link']
-			LOGGER.info("%s not found in cache, downloading to %s", url, temp_file.name)
+			LOGGER.info("%s not found in cache, downloading to %s", url, \
+				temp_file.name)
 
 			http_get(url, temp_file)
 
@@ -105,7 +107,8 @@ def get_resource(res_name, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
 				with open(meta_path, 'w') as meta_file:
 					json.dump(meta, meta_file)
 			else:
-				LOGGER.info("local hashtag %s differs with standard %s", cache_hashtag, config['hashtag'])
+				LOGGER.info("local hashtag %s differs with standard %s", \
+					cache_hashtag, config['hashtag'])
 				raise ValueError("bad hashtag of {}".format(res_name))
 	else:
 		with open(meta_path, 'r') as meta_file:
@@ -117,13 +120,15 @@ def get_resource(res_name, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
 		if cache_hashtag == config['hashtag']:
 			LOGGER.info("hashtag %s checked", cache_hashtag)
 		else:
-			LOGGER.info("local hashtag %s differs with %s", cache_hashtag, config['hashtag'])
+			LOGGER.info("local hashtag %s differs with %s", \
+				cache_hashtag, config['hashtag'])
 			raise ValueError("bad hashtag of {}".format(res_name))
 
 	return DefaultResourceProcessor().postprocess(cache_path)
 
 
-def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
+def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, \
+	config_dir=CONFIG_DIR):
 	'''Import benchmark from local, if hashtag checked, save to cache.'''
 	config = get_config(res_name, config_dir)
 
@@ -139,7 +144,8 @@ def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, config_dir
 
 		return DefaultResourceProcessor().postprocess(local_path)
 	else:
-		LOGGER.info("local hashtag %s differs with standard %s", local_hashtag, config['hashtag'])
+		LOGGER.info("local hashtag %s differs with standard %s", local_hashtag, \
+			config['hashtag'])
 		raise ValueError("bad hashtag of {}".format(res_name))
 
 
