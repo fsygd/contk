@@ -16,7 +16,7 @@ from checksumdir import dirhash
 
 import requests
 
-from resource_processor import DefaultResourceProcessor
+from .resource_processor import DefaultResourceProcessor
 
 LOGGER = logging.getLogger(__name__)
 DATASET_CACHE_PATH = os.path.join(os.getenv('HOME'), 'dataset_cache')
