@@ -27,7 +27,7 @@ class TestFileUtils():
 		with open(res_path, "rb") as fin:
 			for chunk in iter(lambda: fin.read(4096), b""):
 				hash_sha256.update(chunk)
-		assert(hash_sha256.hexdigest() == "aff6cd952797059eccb08bc61e91c86441d55920ddef5bdf98d164356ae2cff2")
+		assert(hash_sha256.hexdigest() == "146ce545f2ed0a8767aadae8f2921f7951df817b39b8f7d0db48bce87e3eaf69")
 
 		meta_path = res_path + '.json'
 		assert(os.path.exists(meta_path))

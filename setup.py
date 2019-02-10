@@ -14,8 +14,7 @@ setup(
 		'numpy>=1.13',
 		'nltk>=3.2',
 		'tqdm>=4.30',
-		'checksumdir>=1.1',
-		'requests_mock>=1.5'
+		'checksumdir>=1.1'
 	],
 	url='https://github.com/thu-coai/contk',
 	author='thu-coai',
