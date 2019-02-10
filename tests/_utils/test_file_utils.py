@@ -1,14 +1,20 @@
 import pytest
 import requests
+import requests_mock
 import os
 import hashlib
 import json
 
 from contk._utils.file_utils import *
 
+@pytest.fixture
+def r_mock():
+	with requests_mock.Mocker() as m:
+		yield m
+
 class TestFileUtils():
-	def test_download(self, requests_mock):
-		requests_mock.get('http://coai.cs.tsinghua.edu.cn/', text='coai')
+	def test_download(self, r_mock):
+		r_mock.get('http://coai.cs.tsinghua.edu.cn/', text='coai')
 
 		cache_dir = './tests/_utils/dataset_cache'
 		config_dir = './tests/_utils/dummy_coai'
