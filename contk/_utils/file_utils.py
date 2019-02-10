@@ -19,13 +19,12 @@ import requests
 from .resource_processor import DefaultResourceProcessor
 
 LOGGER = logging.getLogger(__name__)
-DATASET_CACHE_PATH = os.path.join(os.getenv('HOME'), 'dataset_cache')
+CACHE_DIR = os.path.join(os.getenv('HOME'), 'dataset_cache')
 CONFIG_DIR = '.'
-os.makedirs(DATASET_CACHE_PATH, exist_ok=True)
 
-def get_config(res_name):
+def get_config(res_name, config_dir):
 	'''Get config(dict) by the name of resource'''
-	config_path = os.path.join(CONFIG_DIR, res_name + '.json')
+	config_path = os.path.join(config_dir, res_name + '.json')
 	if not os.path.exists(config_path):
 		raise FileNotFoundError("file {} not found".format(config_path))
 	with open(config_path, 'r') as config_file:
@@ -64,14 +63,15 @@ def get_hashtag(file_path):
 		return get_file_sha256(file_path)
 
 
-def get_resource(res_name):
+def get_resource(res_name, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
 	'''Get the resource with the given name.
 	If not cached, download it using the URL stored in config file.
 	If cached, check the hashtag.
 	'''
-	config = get_config(res_name)
+	os.makedirs(cache_dir, exist_ok=True)
 
-	cache_dir = DATASET_CACHE_PATH
+	config = get_config(res_name, config_dir)
+
 	cache_path = os.path.join(cache_dir, res_name)
 	meta_path = cache_path + '.json'
 
@@ -123,9 +123,9 @@ def get_resource(res_name):
 	return DefaultResourceProcessor().postprocess(cache_path)
 
 
-def import_local_benchmark(res_name, local_path):
+def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
 	'''Import benchmark from local, if hashtag checked, save to cache.'''
-	config = get_config(res_name)
+	config = get_config(res_name, config_dir)
 
 	local_hashtag = get_hashtag(local_path)
 	if local_hashtag == config['hashtag']:
@@ -133,7 +133,7 @@ def import_local_benchmark(res_name, local_path):
 
 		LOGGER.info("creating metadata file for %s", local_path)
 		meta = {'local_path': local_path}
-		meta_path = os.path.join(DATASET_CACHE_PATH, res_name) + '.json'
+		meta_path = os.path.join(cache_dir, res_name) + '.json'
 		with open(meta_path, 'w') as meta_file:
 			json.dump(meta, meta_file)
 
