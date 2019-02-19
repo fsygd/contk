@@ -6,24 +6,24 @@ def run():
 
 	from utils import Storage
 
-	parser = argparse.ArgumentParser(description='A seq2seq model')
+	parser = argparse.ArgumentParser(description='A CVAE model')
 	args = Storage()
 
-	parser.add_argument('--name', type=str, default='seq2seq',
+	parser.add_argument('--name', type=str, default='CVAE',
 		help='The name of your model, used for variable scope and tensorboard, etc. Default: runXXXXXX_XXXXXX (initialized by current time)')
 	parser.add_argument('--restore', type=str, default='last',
 		help='Checkpoints name to load. "last" for last checkpoints, "best" for best checkpoints on dev. Attention: "last" and "best" wiil cause unexpected behaviour when run 2 models in the same dir at the same time. Default: None (don\'t load anything)')
 	parser.add_argument('--mode', type=str, default="train",
 		help='"train" or "test". Default: train')
-	parser.add_argument('--dataset', type=str, default='OpenSubtitles',
-		help='Dataloader class. Default: OpenSubtitles')
-	parser.add_argument('--datapath', type=str, default='/home/kepei/cotk/models/seq2seq-tf-new/data',
+	parser.add_argument('--dataset', type=str, default='SwitchboardCorpus',
+		help='Dataloader class. Default: SwitchboardCorpus')
+	parser.add_argument('--datapath', type=str, default='./data',
 		help='Directory for data set. Default: ./data')
 	parser.add_argument('--epoch', type=int, default=100,
 		help="Epoch for trainning. Default: 100")
 	parser.add_argument('--wvclass', type=str, default=None,
 		help="Wordvector class, none for not using pretrained wordvec. Default: None")
-	parser.add_argument('--wvpath', type=str, default='/home/kepei/cotk/models/seq2seq-tf-new/data/glove.6B.300d.txt',
+	parser.add_argument('--wvpath', type=str, default=None,
 		help="Directory for pretrained wordvector. Default: ./wordvec")
 
 	parser.add_argument('--out_dir', type=str, default="./output",
@@ -60,15 +60,25 @@ def run():
 	args.cuda = not cargs.cpu
 
 	args.softmax_samples = 512
-	args.embedding_size = 300
-	args.eh_size = 200
-	args.dh_size = 200
+	args.use_hcf = True
+	args.full_kl_step = 10000
+	args.latent_size = 200
+	args.topic_embedding_size = 30
+	args.da_embedding_size = 30
+	args.word_embedding_size = 200
+	args.session_window = 10
+	args.repeat_N = 20
+	args.eh_size = 300
+	args.ch_size = 600
+	args.dh_size = 400
 	args.lr = 1e-3
 	args.lr_decay = 0.995
-	args.batch_size = 128
+	args.batch_size = 30
 	args.grad_clip = 5.0
 	args.show_sample = [0]
+	args.min_vocab_times = 5
 	args.max_sen_length = 50
+	args.max_turn_length = 1000
 	args.checkpoint_steps = 1000
 	args.checkpoint_max_to_keep = 5
 

@@ -1,10 +1,10 @@
 import pytest
 import random
+import tensorflow as tf
 from run import run
 from main import main
 import os
 import shutil
-import tensorflow as tf
 cwd = os.path.abspath(os.path.dirname(__file__))
 path = os.path.split(cwd)[0]
 path = os.path.split(path)[0]
@@ -53,12 +53,10 @@ def modify_args(args):
 	args.model_dir = cwd + '/model_test'
 	args.cache_dir = cwd + '/cache_test'
 
-	args.name = 'test_seq2seq_tensorflow'
-	args.wvclass = 'Glove'
+	args.name = 'test_hred_tensorflow'
 	args.epochs = 1
-	args.batch_per_epoch = 5
-	args.batch_size = 5
-	args.datapath = path + '/tests/dataloader/dummy_opensubtitles'
+	args.checkpoint_steps = 1
+	args.datapath = path + '/tests/dataloader/dummy_ubuntucorpus'
 
 def test_train(mocker):
 	def side_effect_train(args):
