@@ -9,6 +9,7 @@ import json
 import numpy as np
 
 from .._utils.unordered_hash import UnorderedSha256
+from .._utils.file_utils import *
 from .dataloader import BasicLanguageGeneration
 from ..metric import MetricChain, MultiTurnPerplexityMetric, MultiTurnBleuCorpusMetric, \
 	MultiTurnDialogRecorder, HashValueRecorder
@@ -204,7 +205,10 @@ class MultiTurnDialog(BasicLanguageGeneration):
 class UbuntuCorpus(MultiTurnDialog):
 	'''A dataloder for Ubuntu dataset.
 
-	Arguments:{ARGUMENTS}
+	Arguments:
+		file_id (str): a str indicates the source of UbuntuCorpus dataset.
+		file_type (str): a str indicates the type of UbuntuCorpus dataset. Default: "Ubuntu"
+		{ARGUMENTS}
 
 	Refer to :class:`.MultiTurnDialog` for attributes and methods.
 
@@ -213,7 +217,6 @@ class UbuntuCorpus(MultiTurnDialog):
 	'''
 
 	ARGUMENTS = r'''
-			file_path (str): a str indicates the dir of OpenSubtitles dataset.
 			min_vocab_times (int): A cut-off threshold of `UNK` tokens. All tokens appear
 				less than `min_vocab_times`	will be replaced by `<unk>`. Default: 10.
 			max_sen_length (int): All sentences longer than `max_sen_length` will be shortened
@@ -226,9 +229,11 @@ class UbuntuCorpus(MultiTurnDialog):
 				testing stages. Default: 0 (No unknown words).
 	'''
 
-	def __init__(self, file_path, min_vocab_times=10, max_sen_length=50, max_turn_length=20, \
+	def __init__(self, file_id, file_type="Ubuntu", min_vocab_times=10, max_sen_length=50, max_turn_length=20, \
 			invalid_vocab_times=0):
-		self._file_path = file_path
+		self._file_id = file_id
+		self._file_path = get_resource_file_path(file_id, file_type)
+		self._file_type = file_type
 		self._min_vocab_times = min_vocab_times
 		self._max_sen_length = max_sen_length
 		self._max_turn_length = max_turn_length
@@ -307,7 +312,9 @@ class UbuntuCorpus(MultiTurnDialog):
 class SwitchboardCorpus(MultiTurnDialog):
 	'''A dataloder for Switchboard dataset.
 
-	Arguments: {ARGUMENTS}
+	Arguments:
+		file_id (str): a str indicates the source of SwitchboardCorpus dataset.
+		{ARGUMENTS}
 
 	Refer to :class:`.MultiTurnDialog` for attributes and methods.
 
