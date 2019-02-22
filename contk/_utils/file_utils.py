@@ -100,7 +100,6 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 			cache_path = resource_processor.preprocess(cache_path)
 
 			cache_hashtag = get_hashtag(cache_path)
-			print('local hashtag', cache_hashtag)
 			if cache_hashtag == config['hashtag']:
 				meta = {'local_path': cache_path}
 				with open(meta_path, 'w') as meta_file:
