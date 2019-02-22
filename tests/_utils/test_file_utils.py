@@ -19,7 +19,7 @@ class TestFileUtils():
 
 		cache_dir = './tests/_utils/dataset_cache'
 		config_dir = './tests/_utils/dummy_coai'
-		res_path = get_resource_file_path('resource://coai', 'Default', cache_dir=cache_dir, config_dir=config_dir)
+		res_path = get_resource_file_path('resources://coai', 'Default', cache_dir=cache_dir, config_dir=config_dir)
 		
 		assert(res_path == os.path.join(cache_dir, '6bd9bfb20a5159d1848a203ece33886690b15d785b0c5d632eed63d70442c58b'))
 		assert(os.path.exists(res_path))
