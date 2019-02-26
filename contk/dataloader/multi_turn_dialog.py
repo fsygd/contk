@@ -9,7 +9,7 @@ import json
 import numpy as np
 
 from .._utils.unordered_hash import UnorderedSha256
-from .._utils.file_utils import *
+from .._utils.file_utils import get_resource_file_path
 from .dataloader import BasicLanguageGeneration
 from ..metric import MetricChain, MultiTurnPerplexityMetric, MultiTurnBleuCorpusMetric, \
 	MultiTurnDialogRecorder, HashValueRecorder

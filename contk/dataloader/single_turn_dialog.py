@@ -7,7 +7,7 @@ from itertools import chain
 import numpy as np
 
 from .._utils.unordered_hash import UnorderedSha256
-from .._utils.file_utils import *
+from .._utils.file_utils import get_resource_file_path
 from .dataloader import BasicLanguageGeneration
 from ..metric import MetricChain, PerlplexityMetric, BleuCorpusMetric, SingleTurnDialogRecorder, \
 			HashValueRecorder

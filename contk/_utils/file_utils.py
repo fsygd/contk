@@ -125,6 +125,7 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 
 	cache_path = resource_processor.postprocess(cache_path)
 	LOGGER.info('resource cached at %s', cache_path)
+	return cache_path
 
 
 def download_resource(url, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
@@ -154,8 +155,9 @@ def download_resource(url, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 		with open(meta_path, 'r') as meta_file:
 			meta = json.load(meta_file)
 			cache_path = meta['local_path']
-	cacche_path = resource_processor.postprocess(cache_path)
+	cache_path = resource_processor.postprocess(cache_path)
 	LOGGER.info('resource cached at %s', cache_path)
+	return cache_path
 
 
 def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, \
