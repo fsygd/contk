@@ -9,6 +9,8 @@ import json
 import tempfile
 import shutil
 import hashlib
+import logging
+import sys
 from pathlib import Path
 
 from tqdm import tqdm
@@ -18,6 +20,12 @@ import requests
 
 from .resource_processor import ResourceProcessor
 
+LOGGER = logging.getLogger(__name__)
+LOGGER.setLevel(level=logging.INFO)
+FORMAT = logging.Formatter("%(asctime)s - %(message)s")
+SH = logging.StreamHandler(stream=sys.stdout)
+SH.setFormatter(FORMAT)
+LOGGER.addHandler(SH)
 CACHE_DIR = os.path.join(str(Path.home()), '.contk_cache')
 CONFIG_DIR = './contk/resource_config'
 
@@ -81,7 +89,7 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 
 	config = get_config(res_name, config_dir)
 	if config['type'] != res_type:
-		raise ValueError("given res_type {} differs with correct res_type {}".format(res_type, config['type']))
+		raise ValueError("res_type {} differs with res_type {}".format(res_type, config['type']))
 
 	resource_processor = ResourceProcessor.load_class(res_type + 'ResourceProcessor')()
 	url = config['link']
@@ -115,7 +123,8 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 		if cache_hashtag != config['hashtag']:
 			raise ValueError("bad hashtag of {}".format(res_name))
 
-	return resource_processor.postprocess(cache_path)
+	cache_path = resource_processor.postprocess(cache_path)
+	LOGGER.info('resource cached at %s', cache_path)
 
 
 def download_resource(url, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
@@ -135,7 +144,7 @@ def download_resource(url, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 
 			with open(cache_path, 'wb') as cache_file:
 				shutil.copyfileobj(temp_file, cache_file)
-			
+
 			cache_path = resource_processor.preprocess(cache_path)
 
 			meta = {'local_path': cache_path}
@@ -145,8 +154,8 @@ def download_resource(url, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 		with open(meta_path, 'r') as meta_file:
 			meta = json.load(meta_file)
 			cache_path = meta['local_path']
-	
-	return resource_processor.postprocess(cache_path)
+	cacche_path = resource_processor.postprocess(cache_path)
+	LOGGER.info('resource cached at %s', cache_path)
 
 
 def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, \
@@ -156,18 +165,14 @@ def import_local_benchmark(res_name, local_path, cache_dir=CACHE_DIR, \
 
 	local_hashtag = get_hashtag(local_path)
 	if local_hashtag == config['hashtag']:
-		LOGGER.info("hashtag %s checked", local_hashtag)
 
-		LOGGER.info("creating metadata file for %s", local_path)
 		meta = {'local_path': local_path}
 		meta_path = os.path.join(cache_dir, res_name) + '.json'
 		with open(meta_path, 'w') as meta_file:
 			json.dump(meta, meta_file)
 
-		return DefaultResourceProcessor().postprocess(local_path)
+		return local_path
 	else:
-		LOGGER.info("local hashtag %s differs with standard %s", local_hashtag, \
-			config['hashtag'])
 		raise ValueError("bad hashtag of {}".format(res_name))
 
 
@@ -178,6 +183,8 @@ def import_local_resource(local_path, res_type):
 
 
 def get_resource_file_path(file_id, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
+	'''Get file_path of resource of all types
+	'''
 	if file_id.startswith('resources://'):
 		res_id = file_id[12:]
 		return get_resource(res_id, res_type, cache_dir, config_dir)

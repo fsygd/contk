@@ -159,7 +159,8 @@ class OpenSubtitles(SingleTurnDialog):
 		[2] P. Lison and J. Tiedemann, OpenSubtitles2016: Extracting Large Parallel Corpora from
 		Movie and TV Subtitles.(LREC 2016)
 	'''
-	def __init__(self, file_id, file_type="OpenSubtitles", min_vocab_times=10, max_sen_length=50, invalid_vocab_times=0):
+	def __init__(self, file_id, file_type="OpenSubtitles", min_vocab_times=10, \
+			max_sen_length=50, invalid_vocab_times=0):
 		self._file_id = file_id
 		self._file_path = get_resource_file_path(file_id, file_type)
 		self._file_type = file_type
