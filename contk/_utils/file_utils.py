@@ -128,7 +128,7 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 	return cache_path
 
 
-def download_resource(url, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR):
+def download_resource(url, res_type, cache_dir=CACHE_DIR):
 	r'''If not cached, download the resource using url.
 	'''
 	os.makedirs(cache_dir, exist_ok=True)
@@ -192,7 +192,7 @@ def get_resource_file_path(file_id, res_type, cache_dir=CACHE_DIR, config_dir=CO
 		return get_resource(res_id, res_type, cache_dir, config_dir)
 	elif file_id.startswith('http://') or file_id.startswith('https://'):
 		url = file_id
-		return download_resource(url, res_type, cache_dir, config_dir)
+		return download_resource(url, res_type, cache_dir)
 	else:
 		local_path = file_id
 		return import_local_resource(local_path, res_type)
