@@ -39,7 +39,7 @@ def url_to_filename(url):
 	return filename
 
 
-def get_config(res_name, config_dir):
+def get_config(res_name, config_dir=CONFIG_DIR):
 	'''Get config(dict) by the name of resource'''
 	config_path = os.path.join(config_dir, res_name + '.json')
 	if not os.path.exists(config_path):
@@ -87,12 +87,19 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 	'''
 	os.makedirs(cache_dir, exist_ok=True)
 
+	if '~' in res_name:
+		res_name, src_name = res_name.split('~', 1)
+	else:
+		src_name = 'github'
+
 	config = get_config(res_name, config_dir)
 	if config['type'] != res_type:
 		raise ValueError("res_type {} differs with res_type {}".format(res_type, config['type']))
 
 	resource_processor = ResourceProcessor.load_class(res_type + 'ResourceProcessor')()
-	url = config['link']
+	if src_name not in config['link']:
+		raise ValueError("source {} wrong".format(src_name))
+	url = config['link'][src_name]
 	cache_path = os.path.join(cache_dir, url_to_filename(url))
 	meta_path = os.path.join(cache_dir, url_to_filename(url) + '.json')
 
