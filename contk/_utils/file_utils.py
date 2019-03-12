@@ -120,6 +120,7 @@ def get_resource(res_name, res_type, cache_dir=CACHE_DIR, config_dir=CONFIG_DIR)
 				with open(meta_path, 'w') as meta_file:
 					json.dump(meta, meta_file)
 			else:
+				print("bad hashtag %s, correct is %s".format(cache_hashtag, config['hashtag']))
 				raise ValueError("bad hashtag of {}".format(res_name))
 	else:
 		with open(meta_path, 'r') as meta_file:
